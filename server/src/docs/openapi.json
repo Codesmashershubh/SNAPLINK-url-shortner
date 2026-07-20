@@ -1,0 +1,143 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SnapLink API",
+    "version": "1.0.0",
+    "description": "REST API for creating and managing short links, QR codes, and click analytics. Authenticate with a session cookie (web app) or an `x-api-key` header (programmatic access)."
+  },
+  "servers": [{ "url": "/api" }],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": { "type": "apiKey", "in": "header", "name": "x-api-key" }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": { "200": { "description": "Service status" } }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Create an account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Account created" } }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Sign in",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Signed in" } }
+      }
+    },
+    "/links": {
+      "post": {
+        "summary": "Shorten a URL",
+        "security": [{ "ApiKeyAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["originalUrl"],
+                "properties": {
+                  "originalUrl": { "type": "string" },
+                  "customAlias": { "type": "string" },
+                  "password": { "type": "string" },
+                  "expiresAt": { "type": "string", "format": "date-time" },
+                  "title": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Link created" } }
+      },
+      "get": {
+        "summary": "List your links",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Paginated list of links" } }
+      }
+    },
+    "/links/{id}": {
+      "get": {
+        "summary": "Get a link",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Link detail" } }
+      },
+      "patch": {
+        "summary": "Update a link",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Updated link" } }
+      },
+      "delete": {
+        "summary": "Delete a link",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/analytics/overview": {
+      "get": {
+        "summary": "Dashboard overview stats",
+        "security": [{ "ApiKeyAuth": [] }],
+        "responses": { "200": { "description": "Aggregate stats for the signed-in account" } }
+      }
+    },
+    "/analytics/link/{id}": {
+      "get": {
+        "summary": "Per-link analytics breakdown",
+        "security": [{ "ApiKeyAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Countries, devices, browsers, referrers, timeline" } }
+      }
+    },
+    "/{code}": {
+      "get": {
+        "summary": "Resolve and redirect a short link",
+        "servers": [{ "url": "/" }],
+        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "302": { "description": "Redirects to the original URL" } }
+      }
+    }
+  }
+}

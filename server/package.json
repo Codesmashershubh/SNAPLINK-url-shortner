@@ -1,0 +1,37 @@
+{
+  "name": "snaplink-server",
+  "version": "1.0.0",
+  "description": "SnapLink API - production-ready URL shortener backend",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/database/seed.js",
+    "lint": "node --check src/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.2.0",
+    "express-validator": "^7.1.0",
+    "geoip-lite": "^1.4.10",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "morgan": "^1.10.0",
+    "nanoid": "^5.0.7",
+    "qrcode": "^1.5.3",
+    "swagger-ui-express": "^5.0.1",
+    "ua-parser-js": "^1.0.38",
+    "xss": "^1.0.15"
+  },
+  "devDependencies": {}
+}
