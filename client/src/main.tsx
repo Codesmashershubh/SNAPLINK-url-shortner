@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
@@ -36,6 +36,6 @@ createRoot(document.getElementById('root')!).render(
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );
